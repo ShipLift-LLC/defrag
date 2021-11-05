@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "vue": "^3.2.16"
+    "luxon": "^2.0.2",
+    "vue": "^3.2.16",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",

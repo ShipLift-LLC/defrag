@@ -1,24 +1,49 @@
 <script setup>
 import { ref } from 'vue'
-import { each, fill, random, times } from 'lodash';
+import { useStore } from 'vuex'
+import { each, random, times } from 'lodash';
+
+const store = useStore()
 
 const ROWS = 16
 const COLS = 76
 
 // Generate a 2d array
-const MAP = times(ROWS, () => { return fill(Array(COLS), '▓') })
-MAP[0][0] = 'X'
+var MAP = ref(times(ROWS, () => { return Array(COLS) }))
 
-each(MAP, (row, r) => {
-  each(row, (col, c) => {
-    if (r == 0 && c == 0) { return }
-    MAP[r][c] = '▓'
-    MAP[r][c] = (random(0, random(1, 15)) == 1) ? '■' : MAP[r][c]
-    MAP[r][c] = (random(0, random(50, 200)) == 3) ? 'X' : MAP[r][c]
-    MAP[r][c] = (random(0, random(15, 1000)) == 2) ? 'B' : MAP[r][c]
+each(MAP.value, (row, r) => {
+  each(row, (col, c) => {    
+    switch (true) {
+      case (random(0, random(1, 15)) == 1):
+        store.commit('INCREMENT_FRAGMENTS')
+        MAP.value[r][c] = {symbol: '■', class: ''}
+      break
+      case (random(0, random(50, 200)) == 3):
+        MAP.value[r][c] = {symbol: 'X', class: ''}
+      break
+      case (random(0, random(15, 1000)) == 2):
+        MAP.value[r][c] = {symbol: 'B', class: ''}
+      break
+      default:
+        MAP.value[r][c] = {symbol: '▓', class: ''}
+    }
   })
 })
 
+// First block is always unmovable
+MAP.value[0][0] = {symbol: 'X', class: ''}
+
+// Hunt and peck
+setInterval(() => {
+  var miss = 0
+  var r = random(0, ROWS)
+  var c = random(0, COLS)
+  var updateRow = MAP.value[r]
+  console.log(updateRow)
+  updateRow[c].class = 'highlight'
+  var cell = MAP.value.splice(r, 1, updateRow)
+
+}, 150)
 
 </script>
 
@@ -27,7 +52,7 @@ each(MAP, (row, r) => {
     <div>
       <div class="row" v-for="(r, k) in MAP" :key="k">
         <template v-for="(c, k) in r" :key="k">
-          <span>{{ c }}</span>
+          <span :class="c.class">{{ c.symbol }}</span>
         </template>
       </div>
     </div>
@@ -36,6 +61,10 @@ each(MAP, (row, r) => {
 </template>
 
 <style scoped>
+
+span.highlight {
+  color: #fff46d
+}
 div.container {
   width: 100%;
   margin-top: 15px;
