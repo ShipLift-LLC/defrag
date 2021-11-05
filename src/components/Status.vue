@@ -2,7 +2,10 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
-import { Interval, DateTime, Duration } from "luxon";
+import { repeat } from "lodash";
+import { Interval, DateTime } from "luxon";
+
+const store = useStore()
 
 const timeStarted = DateTime.utc()
 
@@ -13,7 +16,7 @@ setInterval(() => {
 }, 500)
 
 
-var elapsed = (current) => Interval
+const elapsed = (current) => Interval
   .fromDateTimes(
     timeStarted,
     current
@@ -21,21 +24,25 @@ var elapsed = (current) => Interval
   .toDuration()
   .toFormat('hh:mm:ss')
 
-// var elapsed = '00:00:08'
+var progressBar = () => {
+  var percentCalc = Math.floor((store.state.defragged / store.state.fragmentCount) * 34)
+  return repeat('█', percentCalc).padEnd(34, '▒')
+}
 
-var progressBar = '███████████'.padEnd(34, '▒')
-var percent = '36'.padStart(3, ' ')
+var percentCalc = () => {
+  return String(Math.floor((store.state.defragged / store.state.fragmentCount)* 100)).padStart(3, ' ')
+}
 
-const store = useStore()
+
 const count = computed(() => store.state.count)
-var clusters = Number(store.getters.clusters).toLocaleString('en-US').padEnd(9, ' ')
+var cluster = () => Number(store.getters.cluster).toLocaleString('en-US').padEnd(9, ' ')
 </script>
 <template>
 <pre>
 ┌────────────── Status ──────────────┐
-│ Cluster {{ clusters }}             {{ percent }}% │
-│ {{         progressBar          }} │
-│       Elapsed Time: {{ elapsed(current) }}       │ 
+│ Cluster {{ cluster() }}             {{ percentCalc() }}% │
+│ {{      progressBar()    }} │
+│       Elapsed Time: {{ elapsed(current) }}       │
 │         Full Optimization          │
 └────────────────────────────────────┘
 </pre>

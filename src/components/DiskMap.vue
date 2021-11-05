@@ -8,7 +8,7 @@ const store = useStore()
 const ROWS = 16
 const COLS = 76
 
-// Generate a 2d array
+// Generate a 2d array, and wrap in a ref for reactivity
 var MAP = ref(times(ROWS, () => { return Array(COLS) }))
 
 each(MAP.value, (row, r) => {
@@ -33,16 +33,90 @@ each(MAP.value, (row, r) => {
 // First block is always unmovable
 MAP.value[0][0] = {symbol: 'X', class: ''}
 
-// Hunt and peck
-setInterval(() => {
-  var miss = 0
-  var r = random(0, ROWS)
-  var c = random(0, COLS)
-  var updateRow = MAP.value[r]
-  console.log(updateRow)
-  updateRow[c].class = 'highlight'
-  var cell = MAP.value.splice(r, 1, updateRow)
+const deduceRC = (pos) => { 
+  return { 
+    r: Math.floor(pos / COLS),
+    c: pos % COLS
+  }
+}
 
+const deducePos = ({ r, c}) => {
+  return (r * COLS) + c
+}
+
+
+const writeNewBlock = () => {
+  store.commit('INCREMENT_WRITE_LOC')
+  if (store.state.writeLoc >= COLS*ROWS) {
+    console.log('writeLoc wrapped')
+    store.commit('RESET_WRITE_LOC')
+  }
+
+  var pos = deduceRC(store.state.writeLoc)
+  var updateRow = MAP.value[pos.r]
+
+  switch (updateRow[pos.c].symbol) {
+    case '▓':
+      updateRow[pos.c].class = 'highlight'
+      updateRow[pos.c].symbol = '■'
+    break
+    case '■':
+      store.commit('INCREMENT_DEFRAGGED')
+      updateRow[pos.c].class = 'highlight'
+      writeNewBlock()
+    break
+    default:
+      writeNewBlock()
+  }
+}
+
+// Hunt and peck
+var missLog = []
+
+const clearMissLog = () => {
+  each(missLog, (v) => {
+    MAP.value[v.r][v.c].symbol = '▓'
+  })
+  missLog = []
+}
+
+setInterval(() => {
+  var min = deduceRC(store.state.writeLoc)
+
+  var r = random(min.r, ROWS - 1)
+  var c = random(0, COLS - 1)
+
+  var pos = deducePos({ r, c })
+
+  if (pos <= store.state.writeLoc + 2) { return }
+
+  var updateRow = MAP.value[r]
+
+  switch (updateRow[c].symbol) {
+    case '▓':
+      missLog.push({r,c})
+      updateRow[c].symbol = 'r'
+    break
+    case '■':
+      store.commit('INCREMENT_DEFRAGGED')
+      updateRow[c].symbol = 'r'
+      
+      setTimeout(() => {
+        writeNewBlock()
+        updateRow[c].symbol = '▓'
+      }, 250)
+      
+      if (missLog.length > 0) {
+        writeNewBlock()
+        clearMissLog()
+      }
+    break
+  } 
+
+  if (missLog.length >= 5) {
+    writeNewBlock()
+    clearMissLog()
+  }
 }, 150)
 
 </script>

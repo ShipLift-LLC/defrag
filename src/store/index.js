@@ -6,15 +6,22 @@ const store = createStore({
     return {
       blockClusterSize: 41,
       fragmentCount: 0,
-      defragged: 0
+      defragged: 0,
+      writeLoc: 0,
     }
   },
   getters: {
-    clusters (state) {
-      return state.fragmentCount * state.blockClusterSize
+    cluster (state) {
+      return state.writeLoc * state.blockClusterSize
     }
   },
   mutations: {
+    RESET_WRITE_LOC (state) {
+      state.writeLoc = 0
+    },
+    INCREMENT_WRITE_LOC (state) {
+      state.writeLoc++
+    },
     INCREMENT_DEFRAGGED (state) {
       state.defragged++
     },
