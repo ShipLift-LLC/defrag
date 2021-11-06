@@ -46,6 +46,7 @@ const deducePos = ({ r, c}) => {
 
 
 const writeNewBlock = () => {
+  store.commit('SET_BAR', 'Writing...')
   store.commit('INCREMENT_WRITE_LOC')
   if (store.state.writeLoc >= COLS*ROWS) {
     console.log('writeLoc wrapped')
@@ -83,12 +84,18 @@ const clearMissLog = () => {
 setInterval(() => {
   var min = deduceRC(store.state.writeLoc)
 
+  var percentCalc = Math.ceil((store.state.defragged / store.state.fragmentCount) * 100)
+
+  if (percentCalc == 100 || store.state.writeLoc >= 1196) {
+    window.location.reload()
+  }
+
   var r = random(min.r, ROWS - 1)
   var c = random(0, COLS - 1)
 
   var pos = deducePos({ r, c })
 
-  if (pos <= store.state.writeLoc + 2) { return }
+  if (pos <= store.state.writeLoc + 5) { return }
 
   var updateRow = MAP.value[r]
 
@@ -96,6 +103,7 @@ setInterval(() => {
     case '▓':
       missLog.push({r,c})
       updateRow[c].symbol = 'r'
+      store.commit('SET_BAR', 'Reading...')
     break
     case '■':
       store.commit('INCREMENT_DEFRAGGED')
@@ -117,7 +125,7 @@ setInterval(() => {
     writeNewBlock()
     clearMissLog()
   }
-}, 150)
+}, 100)
 
 </script>
 

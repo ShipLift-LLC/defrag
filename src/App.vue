@@ -4,6 +4,43 @@ import DiskMap from './components/DiskMap.vue'
 import Status from './components/Status.vue'
 import Legend from './components/Legend.vue'
 import Footer from './components/Footer.vue'
+
+// import { random } from 'lodash'
+// import { Howl } from 'howler'
+
+// const LENGTH = 1.468
+
+// var playNext = (hasPaused = false, endPlay = false) => {
+//   if (endPlay === true) {
+//     return
+//   }
+
+//   if( hasPaused === true ) {
+//     console.log(hasPaused)
+//     sound.seek(LENGTH/random(1, 5))
+//     sound.play()
+//     return
+//   }
+
+//   setTimeout(() => { 
+//     playNext(true)
+//   }, random(0.5,1.5) * 1000)
+// }
+
+// var sound = new Howl({
+//   src: ['hdd.mp3'],
+//   volume: 0.5,
+//   onend: playNext
+// })
+// sound.play()
+
+// var sound2 = new Howl({
+//   src: ['hdd.mp3'],
+//   volume: 0.5,
+//   onend: playNext
+// })
+// sound2.play()
+
 </script>
 
 <template>  

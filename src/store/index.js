@@ -4,6 +4,7 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
+      bar: 'Reading...',
       blockClusterSize: 41,
       fragmentCount: 0,
       defragged: 0,
@@ -16,6 +17,9 @@ const store = createStore({
     }
   },
   mutations: {
+    SET_BAR (state, val) {
+      state.bar = val
+    },
     RESET_WRITE_LOC (state) {
       state.writeLoc = 0
     },

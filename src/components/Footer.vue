@@ -1,6 +1,13 @@
+<script setup>
+import { useStore } from 'vuex'
+const store = useStore()
+
+
+</script>
+
 <template>
   <div class="container">
-    <span class="title">Writing...</span>
+    <span class="title">{{ store.state.bar }}</span>
     <span class="action">Microsoft Defrag</span>
   </div>
   <div></div>
