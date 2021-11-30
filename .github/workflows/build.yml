@@ -73,4 +73,4 @@ jobs:
           gcloud config set run/region $REGION
           gcloud config set run/platform managed
 
-          gcloud run deploy $CI_PROJECT_NAME --image $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME
+          gcloud run deploy $PROJECT_NAME --image $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME
