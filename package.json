@@ -2,9 +2,11 @@
   "name": "defrag",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "prepare": "husky install",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "howler": "^2.2.3",
@@ -14,7 +16,12 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
+    "@semantic-release/gitlab": "^7.0.4",
     "@vitejs/plugin-vue": "^1.9.3",
+    "husky": "^7.0.4",
+    "semantic-release": "^18.0.0",
     "vite": "^2.6.4"
   }
 }

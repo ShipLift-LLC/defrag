@@ -1,0 +1,9 @@
+# This will prevent localhost instances from redirecting to https
+<IF "!( %{HTTP_HOST} == 'localhost' || %{HTTP_HOST} == '127.0.0.1' )">
+        <IF "%{HTTP_HOST} != '${SERVER_NAME}'">
+                Redirect https://${SERVER_NAME}/
+        </IF>
+        <IF "%{HTTP:X-Forwarded-Proto} != 'https'">
+                Redirect https://${SERVER_NAME}/
+        </IF>
+</IF>
