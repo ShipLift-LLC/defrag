@@ -67,7 +67,7 @@ jobs:
           REGION: 'us-central1'
           SERVICE_ACCOUNT_USER: 'gitlab@website-328316.iam.gserviceaccount.com'
         run: |
-          cat "$GOOGLE_CLOUD_SERVICE_ACCOUNT" > auth.json
+          echo "$GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64" | base64 -d > auth.json
           gcloud auth activate-service-account $SERVICE_ACCOUNT_USER --key-file=auth.json --project=$PROJECT_ID
           rm auth.json
           gcloud config set run/region $REGION
