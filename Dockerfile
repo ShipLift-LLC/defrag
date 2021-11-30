@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN npm install
-RUN npm build
+RUN npm run build
 
 FROM httpd:latest
 
