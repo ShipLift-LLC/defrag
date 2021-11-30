@@ -20,20 +20,31 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v2
     - name: Test Build Using Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+      
+      
+    - name: Install dependencies
+      run: npm ci
+    - name: Running build
+      run: npm run build --if-present
 
   build-container:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure env
+        run: | 
+          export IMAGE_NAME=$(if [ $CI_COMMIT_BRANCH == "main" ]; then echo "latest"; else echo ${GITHUB_REF_NAME}; fi;);
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+      - name: Build Docker Container
+        run: |
+          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag-website:${{ env.IMAGE_NAME}} .
+      # - run: docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME} || true
+
       # - run: cat "$GOOGLE_CLOUD_SERVICE_ACCOUNT" | docker login -u _json_key --password-stdin https://$CONTAINER_LOCATION
-      - run: export IMAGE_NAME=$(if [ -z ${CI_COMMIT_TAG} ]; then if [ $CI_COMMIT_BRANCH == "main" ]; then echo "latest"; else echo ${CI_COMMIT_BRANCH}; fi; else echo ${CI_COMMIT_TAG}; fi)
-      - run: docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME} || true
-      - run: docker build --build-arg SERVER_NAME=defrag -t us-central1-docker.pkg.dev/website-328316/website/defrag-website:${IMAGE_NAME} .
+     
       # - run: docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME}
