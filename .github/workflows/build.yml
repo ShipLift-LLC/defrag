@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  CONTAINER_LOCATION: 'us-central1-docker.pkg.dev'
+  PROJECT_ID: 'website-328316'
+  CONTAINER_REPOSITORY: 'website'
+  PROJECT_NAME: 'defrag'
+
 jobs:
   test-build:
 
@@ -46,7 +52,25 @@ jobs:
         env:
           GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64 }}
         run: |
-          echo "$GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64" | base64 -d | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
-          docker pull us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }} || true
-          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}" .
-          docker push us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}
+          echo "$GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64" | base64 -d | docker login -u _json_key --password-stdin https://$CONTAINER_LOCATION
+          docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }} || true
+          docker build --build-arg SERVER_NAME=defrag -t "$CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }}" .
+          docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }}
+
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    container: google/cloud-sdk:latest
+    steps:
+      - name: Deploy to Prod
+        env:
+          GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64 }}
+          REGION: 'us-central1'
+          SERVICE_ACCOUNT_USER: 'gitlab@website-328316.iam.gserviceaccount.com'
+        run: |
+          cat "$GOOGLE_CLOUD_SERVICE_ACCOUNT" > auth.json
+          gcloud auth activate-service-account $SERVICE_ACCOUNT_USER --key-file=auth.json --project=$PROJECT_ID
+          rm auth.json
+          gcloud config set run/region $REGION
+          gcloud config set run/platform managed
+
+          gcloud run deploy $CI_PROJECT_NAME --image $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME
