@@ -42,6 +42,7 @@ jobs:
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
       - name: Build Docker Container
         run: |
+          cd ../
           docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag-website:${{ env.IMAGE_NAME }}" .
       # - run: docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME} || true
 
