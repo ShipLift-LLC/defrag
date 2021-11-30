@@ -44,9 +44,7 @@ jobs:
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
       - name: Build Docker Container
         run: |
-          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag-website:${{ env.IMAGE_NAME }}" .
-      # - run: docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME} || true
-
-      # - run: cat "$GOOGLE_CLOUD_SERVICE_ACCOUNT" | docker login -u _json_key --password-stdin https://$CONTAINER_LOCATION
-     
-      # - run: docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME}
+          cat "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}" | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+          docker pull us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }} || true
+          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}" .
+          docker push us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}
