@@ -40,6 +40,7 @@ jobs:
       run: npm run build --if-present
 
   build-container:
+    needs: test-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -58,6 +59,7 @@ jobs:
           docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }}
 
   deploy-to-prod:
+    needs: deploy-to-prod
     runs-on: ubuntu-latest
     container: google/cloud-sdk:latest
     steps:
@@ -74,3 +76,4 @@ jobs:
           gcloud config set run/platform managed
 
           gcloud run deploy $PROJECT_NAME --image $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME
+          gcloud run services update-traffic $PROJECT_NAME --to-latest
