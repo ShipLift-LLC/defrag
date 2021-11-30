@@ -17,9 +17,7 @@ env:
 
 jobs:
   test-build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -59,7 +57,7 @@ jobs:
           docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }}
 
   deploy-to-prod:
-    needs: deploy-to-prod
+    needs: build-container
     runs-on: ubuntu-latest
     container: google/cloud-sdk:latest
     steps:
