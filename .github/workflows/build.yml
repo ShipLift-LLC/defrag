@@ -38,11 +38,11 @@ jobs:
     steps:
       - name: Configure env
         run: | 
-          export IMAGE_NAME=$(if [ $CI_COMMIT_BRANCH == "main" ]; then echo "latest"; else echo ${GITHUB_REF_NAME}; fi;);
+          export IMAGE_NAME=$(if [ $GITHUB_REF_NAME == "main" ]; then echo "latest"; else echo ${GITHUB_REF_NAME}; fi;);
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
       - name: Build Docker Container
         run: |
-          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag-website:${{ env.IMAGE_NAME}} .
+          docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag-website:${{ env.IMAGE_NAME }}" .
       # - run: docker pull $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$CI_PROJECT_NAME:${IMAGE_NAME} || true
 
       # - run: cat "$GOOGLE_CLOUD_SERVICE_ACCOUNT" | docker login -u _json_key --password-stdin https://$CONTAINER_LOCATION
