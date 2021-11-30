@@ -43,8 +43,10 @@ jobs:
           export IMAGE_NAME=$(if [ $GITHUB_REF_NAME == "main" ]; then echo "latest"; else echo ${GITHUB_REF_NAME}; fi;);
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
       - name: Build Docker Container
+        env:
+          GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64 }}
         run: |
-          echo "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}" | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+          echo "$GOOGLE_CLOUD_SERVICE_ACCOUNT_BASE64" | base64 -d | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
           docker pull us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }} || true
           docker build --build-arg SERVER_NAME=defrag -t "us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}" .
           docker push us-central1-docker.pkg.dev/website-328316/website/defrag:${{ env.IMAGE_NAME }}
