@@ -170,8 +170,16 @@ span.highlight {
   
 }
 @media screen and (max-width: 768px){
+  .container {
+    font-size: calc(100vw/45);
+  }
   .row {
     letter-spacing: calc(.25vw);
   }
+  .row span:nth-child(3n) { 
+    display: none;
+  } 
+
+  
 }
 </style>
