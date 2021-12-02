@@ -8,7 +8,7 @@ const store = useStore()
 <template>
   <div class="container">
     <span class="title">{{ store.state.bar }}</span>
-    <span class="action">Microsoft Defrag</span>
+    <span class="action"><a href="https://shiplift.io" target="_blank">ShipLift.io Defrag</a></span>
   </div>
 </template>
 <style scoped>
@@ -24,6 +24,9 @@ const store = useStore()
   margin-top: auto;
 }
 
+a {
+  all:unset;
+}
 .action {
   float: right;
   margin-right: 20px;
