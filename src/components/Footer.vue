@@ -10,7 +10,6 @@ const store = useStore()
     <span class="title">{{ store.state.bar }}</span>
     <span class="action">Microsoft Defrag</span>
   </div>
-  <div></div>
 </template>
 <style scoped>
 .title {
@@ -22,8 +21,7 @@ const store = useStore()
   color: #ad2a13;
   font-weight: 900;
   width: 100%;
-  position: fixed;
-  bottom: -21px;
+  margin-top: auto;
 }
 
 .action {

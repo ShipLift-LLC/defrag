@@ -60,6 +60,13 @@ import Footer from './components/Footer.vue'
   font-family: Terminal, VT323, 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  height: 100vh;
 }
 
 body {
@@ -69,6 +76,7 @@ body {
   background-color: #4f68ff;
   transform-origin: top center;
   transform: scaleY(1.6);
+  height: 62.5%;
 }
 
 .details {
