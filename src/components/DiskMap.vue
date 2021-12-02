@@ -147,16 +147,39 @@ setInterval(() => {
 span.highlight {
   color: #fff46d
 }
-div.container {
+.container {
   width: 100%;
-  margin-top: 15px;
+  max-width: 1240px;
+  padding-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   justify-content: center;
+  font-size: calc(1240px/76);
+  letter-spacing: .25vw;
 }
-div.row {
+@media screen and (max-width: 1240px){
+  .container {
+    font-size: calc(100vw/60);
+  }
+}
+.row {
   font-weight: bold;
   margin-top: 0px;
   margin-bottom: 0px;
-  letter-spacing: 3px;
+  
+}
+@media screen and (max-width: 768px){
+  .container {
+    font-size: calc(100vw/45);
+  }
+  .row {
+    letter-spacing: calc(.25vw);
+  }
+  .row span:nth-child(3n) { 
+    display: none;
+  } 
+
+  
 }
 </style>

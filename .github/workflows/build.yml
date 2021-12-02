@@ -38,6 +38,7 @@ jobs:
       run: npm run build --if-present
 
   build-container:
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: test-build
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +58,7 @@ jobs:
           docker push $CONTAINER_LOCATION/$PROJECT_ID/$CONTAINER_REPOSITORY/$PROJECT_NAME:${{ env.IMAGE_NAME }}
 
   deploy-to-prod:
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: build-container
     runs-on: ubuntu-latest
     container: google/cloud-sdk:latest
