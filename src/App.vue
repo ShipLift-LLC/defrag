@@ -4,6 +4,23 @@ import DiskMap from './components/DiskMap.vue'
 import Status from './components/Status.vue'
 import Legend from './components/Legend.vue'
 import Footer from './components/Footer.vue'
+import { useStore } from 'vuex'
+import {onMounted, onBeforeUnmount} from 'vue';
+const store = useStore();
+
+const keyup = (event) => {
+  if(event.key === 'Escape') {
+    if(store.state.paused) store.commit('UNPAUSE_DEFRAG')
+    else store.commit('PAUSE_DEFRAG');
+  }
+}
+const mounted = onMounted(() => {
+  window.addEventListener('keyup', keyup) 
+})
+
+const unmounted = onBeforeUnmount(() => {
+  window.removeEventListener('keyup', keyup);
+})
 
 // import { random } from 'lodash'
 // import { Howl } from 'howler'
@@ -41,11 +58,12 @@ import Footer from './components/Footer.vue'
 // })
 // sound2.play()
 
+
 </script>
 
-<template>  
+<template >  
   <Toolbar />
-  <div>
+  <div @keyup.up="pause">
     <DiskMap />
     <div class="details">
       <Status />

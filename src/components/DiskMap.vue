@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { each, random, times } from 'lodash';
-
 const store = useStore()
 
 const ROWS = 16
@@ -15,7 +14,9 @@ each(MAP.value, (row, r) => {
   each(row, (col, c) => {    
     switch (true) {
       case (random(0, random(1, 15)) == 1):
-        store.commit('INCREMENT_FRAGMENTS')
+        if(!store.state.paused) {
+          store.commit('INCREMENT_FRAGMENTS')
+        }
         MAP.value[r][c] = {symbol: '■', class: ''}
       break
       case (random(0, random(50, 200)) == 3):
@@ -82,6 +83,7 @@ const clearMissLog = () => {
 }
 
 setInterval(() => {
+  if(store.state.paused) return;
   var min = deduceRC(store.state.writeLoc)
 
   var percentCalc = Math.ceil((store.state.defragged / store.state.fragmentCount) * 100)
@@ -126,6 +128,7 @@ setInterval(() => {
     clearMissLog()
   }
 }, 100)
+
 
 </script>
 
@@ -183,3 +186,5 @@ span.highlight {
   
 }
 </style>
+
+
