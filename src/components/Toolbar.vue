@@ -1,7 +1,13 @@
+<script setup>
+import { useStore } from 'vuex'
+const store = useStore()
+
+{{ store.state.bar }}
+</script>
 <template>
   <div class="container">
     <span class="title">Optimize</span>
-    <span class="action">Esc=Stop Defrag</span>
+    <span class="action">Esc={{ store.state.paused ? 'Start' : 'Stop' }} Defrag</span>
   </div>
 </template>
 <style scoped>

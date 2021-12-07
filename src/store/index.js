@@ -4,12 +4,13 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
-      bar: 'Reading...',
+      bar: "Reading...",
       blockClusterSize: 41,
       fragmentCount: 0,
       defragged: 0,
       writeLoc: 0,
-    }
+      paused: false,
+    };
   },
   getters: {
     cluster (state) {
@@ -31,6 +32,12 @@ const store = createStore({
     },
     INCREMENT_FRAGMENTS (state) {
       state.fragmentCount++
+    },
+    PAUSE_DEFRAG (state) {
+      state.paused = true;
+    },
+    UNPAUSE_DEFRAG (state) {
+      state.paused = false;
     }
   }
 })
