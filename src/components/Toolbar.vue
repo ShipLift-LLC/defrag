@@ -54,7 +54,7 @@ a {
 }
 
 .action {
-  width: 400px;
+  width: 275px;
   float: right;
   margin-right: 20px;
   text-align: center;
