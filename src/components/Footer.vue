@@ -26,6 +26,7 @@ const store = useStore()
 
 a {
   all:unset;
+  cursor: pointer;
 }
 .action {
   float: right;

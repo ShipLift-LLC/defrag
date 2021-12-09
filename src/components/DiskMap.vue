@@ -89,6 +89,7 @@ setInterval(() => {
   var percentCalc = Math.ceil((store.state.defragged / store.state.fragmentCount) * 100)
 
   if (percentCalc == 100 || store.state.writeLoc >= 1196) {
+    store.commit('PAUSE_DEFRAG')
     window.location.reload()
   }
 
@@ -186,5 +187,3 @@ span.highlight {
   
 }
 </style>
-
-
